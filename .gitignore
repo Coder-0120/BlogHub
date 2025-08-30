@@ -1,16 +1,18 @@
-# Node.js dependencies
+# Root-level node_modules (if any)
 node_modules/
-server/node_modules/
+
+# Client dependencies
 client/node_modules/
 
+# Server dependencies
+server/node_modules/
+
+# Env files
+*.env
+
 # Logs
-logs
 *.log
-npm-debug.log*
 
-# Build outputs
+# Build output
 client/build/
-dist/
-
-# Environment variables
-.env
+server/dist/
