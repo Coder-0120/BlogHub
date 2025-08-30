@@ -1,0 +1,72 @@
+.navbar {
+  font-size: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #1c4e71 !important;
+}
+
+.navbar-brand {
+  font-size: 1.4rem;
+  letter-spacing: 1px;
+}
+
+.nav-link {
+  color: white !important;
+  margin-left: 15px;
+  /* transition: all 0.2s ease-in-out; */
+}
+
+.nav-link:hover {
+  /* color: #ffe082 !important; */
+  /* text-decoration: underline; */
+  background-color: #3a6b8e;
+  border-radius: 30px;
+  /* border-color: #ffe082; */
+  border: 2px solid #efc033;
+}
+
+/* Profile icon and dropdown styles */
+.profile-menu {
+  position: relative;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.profile-icon {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s;
+  margin-right: -100px;
+}
+
+.profile-icon:hover {
+  transform: scale(1.05);
+}
+
+.dropdown {
+  position: absolute;
+  right: 0;
+  margin-top: 8px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 150px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  overflow: hidden;
+}
+
+.dropdown-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+  /* background-color: #5a85fc; */
+
+}
