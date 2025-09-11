@@ -18,7 +18,12 @@ const MyBlogsPage = () => {
     const fetchBlogs = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/blogs/myblogs/${userInfo.email}`
+          `http://localhost:5000/api/blogs/myblogs/${userInfo.email}`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
         );
         setBlogs(res.data.data);
       } catch (err) {
@@ -32,7 +37,12 @@ const MyBlogsPage = () => {
   // Delete blog
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/blogs/delete/${id}`);
+      await axios.delete(`http://localhost:5000/api/blogs/delete/${id}`,{
+        headers:{
+          authorization: `Bearer ${localStorage.getItem("token")}`,
+
+        }
+      });
       setBlogs(blogs.filter((blog) => blog._id !== id));
       alert("Blog deleted successfully!");
     } catch (err) {

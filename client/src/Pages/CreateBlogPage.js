@@ -35,8 +35,9 @@ const CreateBlogPage = () => {
     try {
       const res = await axios.post(
         "http://localhost:5000/api/blogs/create",
+
         data,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        { headers: { "Content-Type": "multipart/form-data", "authorization": `Bearer ${localStorage.getItem("token")}` } }
       );
 
       console.log("Response:", res.data);

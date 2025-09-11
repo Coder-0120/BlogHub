@@ -25,7 +25,11 @@ const Profile = () => {
     const fetchBlogs = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/blogs/myblogs/${emailToFetch}`
+          `http://localhost:5000/api/blogs/myblogs/${emailToFetch}`,{
+            headers:{
+            authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+          }
         );
         setBlogs(res.data.data);
       } catch (err) {
@@ -123,7 +127,7 @@ const Profile = () => {
       <div className="profile-stats">
         <div className="stat-item">No. of Blogs Published: {blogs.length}</div>
         <br />
-        <div className="stat-item">No. of Likes Received: </div>
+        {/* <div className="stat-item">No. of Likes Received: </div> */}
       </div>
 
       {open && (

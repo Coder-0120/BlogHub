@@ -46,6 +46,7 @@ const userInfo = storedUser ? JSON.parse(storedUser).user : null;
 
   const handleLogout = () => {
     localStorage.removeItem("userInfo");
+    localStorage.removeItem("token");
     navigate("/login");
     setOpen(false);
   };

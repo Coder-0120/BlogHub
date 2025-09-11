@@ -15,7 +15,11 @@ const AllBlogs = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/blogs/allblogs");
+        const res = await axios.get("http://localhost:5000/api/blogs/allblogs",{
+          headers:{
+            authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        });
         setBlogs(res.data.data || []);
         setFilteredBlogs(res.data.data || []);
       } catch (err) {
@@ -52,56 +56,53 @@ const AllBlogs = () => {
   };
 
   // Like/unlike handler
-  const handleLike = async (blogId) => {
-    if (!userInfo) return alert("Please login to like posts");
+ const handleLike = async (blogId) => {
+  if (!userInfo) return alert("Please login to like posts");
 
-    //  update in blogs and filteredBlogs
-    const updateLikes = (blogList) =>
-      blogList.map((b) => {
-        if (b._id !== blogId) return b;
-        const likesArray = Array.isArray(b.likes) ? b.likes : [];
-        const liked = likesArray.includes(userInfo._id);
-        return {
-          ...b,
-          likes: liked
-            ? likesArray.filter((id) => id !== userInfo._id)
-            : [...likesArray, userInfo._id],
-        };
-      });
-
-    setBlogs((prev) => updateLikes(prev));
-    setFilteredBlogs((prev) => updateLikes(prev));
-
-    // Update modal if it's the same blog
-    setSelectedBlog((prev) => {
-      if (!prev || prev._id !== blogId) return prev;
-      const likesArray = Array.isArray(prev.likes) ? prev.likes : [];
+  // Optimistic update
+  const updateLikes = (blogList) =>
+    blogList.map((b) => {
+      if (b._id !== blogId) return b;
+      const likesArray = Array.isArray(b.likes) ? b.likes : [];
       const liked = likesArray.includes(userInfo._id);
       return {
-        ...prev,
+        ...b,
         likes: liked
           ? likesArray.filter((id) => id !== userInfo._id)
           : [...likesArray, userInfo._id],
       };
     });
 
-    try {
-      await axios.post(
-        `http://localhost:5000/api/blogs/${blogId}/like`,
-        { userId: userInfo._id }
-      );
-      const res2 = await axios.get("http://localhost:5000/api/blogs/allblogs");
-      setBlogs(res2.data.data || []);
-      setFilteredBlogs(res2.data.data || []);
-      if (selectedBlog && selectedBlog._id === blogId) {
-        const updatedBlog = (res2.data.data || []).find((b) => b._id === blogId);
-        setSelectedBlog(updatedBlog);
+  setBlogs((prev) => updateLikes(prev));
+  setFilteredBlogs((prev) => updateLikes(prev));
+
+  setSelectedBlog((prev) => {
+    if (!prev || prev._id !== blogId) return prev;
+    const likesArray = Array.isArray(prev.likes) ? prev.likes : [];
+    const liked = likesArray.includes(userInfo._id);
+    return {
+      ...prev,
+      likes: liked
+        ? likesArray.filter((id) => id !== userInfo._id)
+        : [...likesArray, userInfo._id],
+    };
+  });
+
+  try {
+    await axios.post(
+      `http://localhost:5000/api/blogs/${blogId}/like`,
+      {},
+      {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("token")}`
+        }
       }
-    } catch (err) {
-      console.error("Error liking blog:", err);
-      alert("Failed to like/unlike post.");
-    }
-  };
+    );
+  } catch (err) {
+    console.error("Error liking blog:", err);
+    alert("Failed to like/unlike post.");
+  }
+};
 
   return (
     <div

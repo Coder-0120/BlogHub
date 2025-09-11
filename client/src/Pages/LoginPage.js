@@ -17,9 +17,12 @@ const LoginPage = () => {
       const response = await axios.post('http://localhost:5000/api/user/login', {
         email,
         password,
+
       });
 
       const user = response.data; 
+      const token = user.token;
+      localStorage.setItem('token', token);
       localStorage.setItem('userInfo', JSON.stringify(user));
       alert('Login successful');
       navigate("/all-blogs");
