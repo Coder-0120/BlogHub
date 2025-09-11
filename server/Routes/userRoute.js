@@ -2,6 +2,8 @@ const userModel = require("../Models/userModel");
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const Verifytoken = require("../middlewares/Verifytoken");
 
 /// register new user
 router.post("/register", async (req, res) => {
@@ -56,9 +58,16 @@ router.post("/login", async (req, res) => {
         message: "Invalid credentials",
       });
     }
+     const token = jwt.sign(
+          { id: user._id, email: user.email },
+          process.env.JWT_SECRET,
+          { expiresIn: process.env.JWT_EXPIRES_IN }
+      );
+    
     res.status(200).json({
       success: true,
       message: "Login successful",
+      token,
       user: {
         _id: user._id,
         name: user.name,

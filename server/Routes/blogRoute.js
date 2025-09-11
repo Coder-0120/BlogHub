@@ -2,6 +2,8 @@ const express=require("express");
 const router=express.Router();
 const BlogModel=require("../Models/BlogModel");
 const multer = require("multer");
+const Verifytoken = require("../middlewares/Verifytoken");
+const jwt=require("jsonwebtoken");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -13,7 +15,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage }); 
 
-router.post("/create",upload.single("image"),async(req,res)=>{
+router.post("/create",Verifytoken, upload.single("image"),async(req,res)=>{
     const {title,content,author,category,authorEmail}=req.body;
     const image=req.file?req.file.path:null;
     try{
@@ -40,7 +42,7 @@ router.post("/create",upload.single("image"),async(req,res)=>{
     }
 })
 
-router.get("/myblogs/:email",async(req,res)=>{
+router.get("/myblogs/:email",Verifytoken,async(req,res)=>{
     const email=req.params.email;
     const isAuthor=await BlogModel.find({authorEmail:email});
     if(!isAuthor || isAuthor.length === 0){
@@ -57,7 +59,7 @@ router.get("/myblogs/:email",async(req,res)=>{
 
 })
 
-router.get("/allblogs",async(req,res)=>{
+router.get("/allblogs",Verifytoken,async(req,res)=>{
     try{
         const allblogs=await BlogModel.find().populate("author", "name avtar ");
         if(!allblogs || allblogs.length === 0){
@@ -80,7 +82,7 @@ router.get("/allblogs",async(req,res)=>{
     }
 })
 
-router.delete("/delete/:id",async(req,res)=>{
+router.delete("/delete/:id",Verifytoken,async(req,res)=>{
     try{
         await BlogModel.findByIdAndDelete(req.params.id);
         return res.status(200).json({
